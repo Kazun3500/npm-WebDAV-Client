@@ -485,11 +485,14 @@ export class Connection
                         {
                             const props = el.find('DAV:propstat').find('DAV:prop');
                             const type = props.find('DAV:resourcetype').findIndex('DAV:collection') !== -1 ? 'directory' : 'file';
-
+                            let creationDate: any = undefined
+                            try {
+                                creationDate = new Date(props.find('DAV:creationdate').findText())
+                            } catch (e) {
+                            }
                             return {
                                 name,
-
-                                creationDate: props.find('DAV:creationdate') ? new Date(props.find('DAV:creationdate').findText()) : undefined,
+                                creationDate: creationDate,
                                 lastModified: new Date(props.find('DAV:getlastmodified').findText()),
                                 type: type,
                                 isFile: type === 'file',
