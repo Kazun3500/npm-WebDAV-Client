@@ -1,4 +1,3 @@
-import { Readable, Writable } from 'stream'
 import * as req from 'request'
 import * as http from 'http'
 

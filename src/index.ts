@@ -259,14 +259,24 @@ export class Connection
         })
     }
 
-    get(path : string, callback : (error ?: Error, body ?: ContentType) => void) : void
+    get(path : string, callback ?: (error ?: Error, body ?: ContentType) => void) : void
     get(path : string) : Stream
-    get(path : string, callback ?: (error ?: Error, body ?: ContentType) => void) : Stream
+    get(path : string, callback ?: (error ?: Error, body ?: ContentType) => void,
+        range ?: {start: number, end: number} ) : Stream| void
     {
+        let rangeHeader = ''
         const options : RequestOptions = {
             url: path,
-            method: 'GET'
+            method: 'GET',
         };
+
+        if (typeof range === "object" && typeof range.start === "number") {
+            rangeHeader = "bytes=" + range.start + "-";
+            if (typeof range.end === "number") {
+                rangeHeader += range.end;
+            }
+            options.headers = {Range: rangeHeader}
+        }
 
         if(callback)
         { // Not a stream
@@ -315,7 +325,7 @@ export class Connection
 
         if(callback)
         { // Not a stream
-            options.body = content as ContentType,
+            options.body = content as ContentType
             this.request(options, (e, res, body) => {
                 if(e)
                     return callback(e);
@@ -485,14 +495,11 @@ export class Connection
                         {
                             const props = el.find('DAV:propstat').find('DAV:prop');
                             const type = props.find('DAV:resourcetype').findIndex('DAV:collection') !== -1 ? 'directory' : 'file';
-                            let creationDate: any = undefined
-                            try {
-                                creationDate = new Date(props.find('DAV:creationdate').findText())
-                            } catch (e) {
-                            }
+
                             return {
                                 name,
-                                creationDate: creationDate,
+                                creationDate: props.findIndex('DAV:creationdate') >= 0 ?
+                                    new Date(props.find('DAV:creationdate').findText()): undefined,
                                 lastModified: new Date(props.find('DAV:getlastmodified').findText()),
                                 type: type,
                                 isFile: type === 'file',

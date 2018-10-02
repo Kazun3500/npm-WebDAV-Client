@@ -55,6 +55,7 @@ class Connection
 
     get(path : string, callback : (error : Error, body : ContentType) => void) : void
     get(path : string, callback : (error : Error, body : ContentType) => void) : Stream
+    get(path : string, callback : (error : Error, body : ContentType) => void, range ?: {start: number, end: number} ) : Stream
 
     put(path : string, content : ContentType, callback : (error : Error) => void) : void
     put(path : string) : Stream
