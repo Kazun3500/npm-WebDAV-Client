@@ -71,8 +71,10 @@ export declare class Connection {
     prepareForStreaming(path: string, callback: (error?: Error) => void): void;
     prepareForStreaming(callback: (error?: Error) => void): void;
     exists(path: string, callback: (error: Error, exists: boolean) => void): void;
-    get(path: string, callback?: (error?: Error, body?: ContentType) => void): void;
-    get(path: string): Stream;
+    get(path: string, callback?: (error?: Error, body?: ContentType) => void, range?: {
+        start: number;
+        end: number;
+    }): Stream | void;
     getObject<T>(path: string, callback: (error?: Error, body?: T) => void): void;
     put(path: string, content: ContentType, callback: (error?: Error) => void): void;
     put(path: string): Stream;

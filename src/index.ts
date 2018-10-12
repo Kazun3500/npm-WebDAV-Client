@@ -259,10 +259,7 @@ export class Connection
         })
     }
 
-    get(path : string, callback ?: (error ?: Error, body ?: ContentType) => void) : void
-    get(path : string) : Stream
-    get(path : string, callback ?: (error ?: Error, body ?: ContentType) => void,
-        range ?: {start: number, end: number} ) : Stream| void
+    get(path : string, callback ?: (error ?: Error, body ?: ContentType) => void, range ?: {start: number, end: number} ) : Stream| void
     {
         let rangeHeader = ''
         const options : RequestOptions = {
